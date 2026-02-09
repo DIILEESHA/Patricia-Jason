@@ -1,0 +1,108 @@
+/* ================= Couple Grid ================= */
+.couple_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0 100px;
+  gap: 40px; /* spacing between items */
+}
+
+.couple_sub_grid {
+  margin-bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.couple_img {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #333;
+}
+
+.person_name {
+  font-family: "silk";
+  font-weight: 700;
+  margin-top: 20px;
+  font-size: 22px;
+}
+
+.person_role {
+  font-family: "hel";
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+/* Optional: for small adjustment class */
+.mosiya {
+  margin: -100px 0;
+}
+
+/* ================= Media Queries ================= */
+
+/* Medium devices (tablets, 768px - 1024px) */
+@media (max-width: 1024px) {
+  .couple_grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 50px;
+    gap: 30px;
+  }
+
+  .couple_img {
+    height: 180px;
+    width: 180px;
+  }
+
+  .person_name {
+    font-size: 20px;
+  }
+
+  .person_role {
+    font-size: 16px;
+  }
+}
+
+/* Small devices (mobile, <768px) */
+@media (max-width: 767px) {
+  .couple_grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 20px;
+    gap: 20px;
+  }
+
+  .couple_img {
+    height: 150px;
+    width: 150px;
+  }
+
+  .person_name {
+    font-size: 18px;
+  }
+
+  .person_role {
+    font-size: 14px;
+  }
+}
+
+/* Extra small devices (<480px) */
+@media (max-width: 480px) {
+  .couple_img {
+    height: 120px;
+    width: 120px;
+  }
+
+  .person_name {
+    font-size: 20px;
+  }
+
+  .person_role {
+    font-size: 18px;
+  }
+
+  .couple_grid {
+    padding: 0 10px;
+  }
+}
