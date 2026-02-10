@@ -72,7 +72,7 @@ const Rsvp = () => {
           <h2 className="rsvp_ttle">RSVP</h2>
 
           <p className="rsvp_p">
-            Kindly RSVP by <strong>March 13th, 2026</strong>.<br />
+            Kindly RSVP by <strong>March 6th, 2026</strong>.<br />
             <br />
             To honor the diverse backgrounds of our families and friends, we
             will be providing flags for our guests. Please indicate the country

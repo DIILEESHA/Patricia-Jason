@@ -2,7 +2,7 @@ import React from "react";
 import "./ourstory.css";
 import as from "../../src/assets/a1.jpeg"
 import asd from "../../src/assets/a2.jpeg"
-import asdd from "../../src/assets/a3.jpeg"
+import asdd from "../../src/assets/couple5.jpeg"
 const OurStory = () => {
   return (
     <div className="story-container">

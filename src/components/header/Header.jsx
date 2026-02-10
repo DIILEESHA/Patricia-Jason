@@ -1,7 +1,7 @@
 import React from "react";
 import "./header.css";
 
-import couple1 from "../../assets/couple1.webp"
+import couple1 from "../../assets/couple4.png"
 import couple2 from "../../assets/couple2.webp"
 import couple3 from "../../assets/couple3.jpeg"
 const Header = () => {

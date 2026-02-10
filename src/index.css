@@ -177,7 +177,14 @@ li {
 .footer-divider {
   animation: pulse 2s ease-in-out infinite;
 }
+.pasiya{
+  margin-top: 100px;
+}
 
+
+.date{
+  margin-top: -50px;
+}
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .instagram-profiles {
@@ -196,6 +203,7 @@ li {
     margin-bottom: 0;
     gap: 0;
   }
+
 
   .instagram-box {
     /* margin-bottom: -40px; */
