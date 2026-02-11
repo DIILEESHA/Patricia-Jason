@@ -8,34 +8,30 @@ const Rsvp = () => {
     fullName: "",
     attendingWedding: "",
     attendingReception: "",
-    transportationNeeded: "",
-    transportFrom: [],
     heritage: "",
     bringingGuests: "no",
     guestType: "",
     guestCount: "1",
-    message: "",
+
+    // Transportation
+    needChurchTransport: "no",
+    churchTransportCount: "",
+
+    needHotelTransport: "no",
+    hotelTransportCount: "",
+
     submittedAt: new Date().toISOString(),
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
 
-    if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        transportFrom: checked
-          ? [...prev.transportFrom, value]
-          : prev.transportFrom.filter((item) => item !== value),
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -43,19 +39,25 @@ const Rsvp = () => {
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, "rsvps"), formData);
+      await addDoc(collection(db, "rsvps"), {
+        ...formData,
+        submittedAt: new Date().toISOString(),
+      });
+
       alert("Thank you for your RSVP!");
+
       setFormData({
         fullName: "",
         attendingWedding: "",
         attendingReception: "",
-        transportationNeeded: "",
-        transportFrom: [],
         heritage: "",
         bringingGuests: "no",
         guestType: "",
         guestCount: "1",
-        message: "",
+        needChurchTransport: "no",
+        churchTransportCount: "",
+        needHotelTransport: "no",
+        hotelTransportCount: "",
         submittedAt: new Date().toISOString(),
       });
     } catch (error) {
@@ -72,18 +74,15 @@ const Rsvp = () => {
           <h2 className="rsvp_ttle">RSVP</h2>
 
           <p className="rsvp_p">
-            Kindly RSVP by <strong>March 6th, 2026</strong>.<br />
-            <br />
-            To honor the diverse backgrounds of our families and friends, we
-            will be providing flags for our guests. Please indicate the country
-            or heritage you wish to represent.
-            <br />
-            <br />
+            Kindly RSVP by <strong>March 6th, 2026</strong>.
+            <br /><br />
             Shuttle transportation will be provided between the hotel, church,
             and venue.
           </p>
+
           <div className="form_area">
             <form onSubmit={handleSubmit} className="rsvp_form">
+
               {/* Guest Name */}
               <div className="rsvp_inputer_section">
                 <label className="rsvp_label">Guest Name(s)</label>
@@ -97,7 +96,7 @@ const Rsvp = () => {
                 />
               </div>
 
-              {/* Wedding RSVP */}
+              {/* Wedding */}
               <div className="rsvp_inputer_section">
                 <label className="rsvp_label">
                   Will you attend the Wedding Ceremony?
@@ -115,7 +114,7 @@ const Rsvp = () => {
                 </select>
               </div>
 
-              {/* Reception RSVP */}
+              {/* Reception */}
               <div className="rsvp_inputer_section">
                 <label className="rsvp_label">
                   Will you attend the Reception?
@@ -144,45 +143,64 @@ const Rsvp = () => {
                   name="heritage"
                   value={formData.heritage}
                   onChange={handleChange}
-                  placeholder="e.g. Italy, Ireland"
                 />
               </div>
 
-              {/* Transportation */}
+              {/* Church Transport */}
               <div className="rsvp_inputer_section">
                 <label className="rsvp_label">
-                  Will you need transportation?
+                  Do you need transportation from Church → Venue?
                 </label>
                 <select
-                  name="transportationNeeded"
+                  name="needChurchTransport"
                   className="rsvp_input"
-                  value={formData.transportationNeeded}
+                  value={formData.needChurchTransport}
                   onChange={handleChange}
                 >
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
                   <option value="no">No</option>
+                  <option value="yes">Yes</option>
                 </select>
 
-                {formData.transportationNeeded === "yes" && (
-                  <div className="attendance_options">
-                    <label>
-                      <input
-                        type="checkbox"
-                        value="hotel"
-                        onChange={handleChange}
-                      />{" "}
-                      From Hotel
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value="church"
-                        onChange={handleChange}
-                      />{" "}
-                      From Church
-                    </label>
-                  </div>
+                {formData.needChurchTransport === "yes" && (
+                  <input
+                    type="number"
+                    min="1"
+                    name="churchTransportCount"
+                    className="rsvp_input"
+                    placeholder="How many people?"
+                    value={formData.churchTransportCount}
+                    onChange={handleChange}
+                    required
+                  />
+                )}
+              </div>
+
+              {/* Hotel Transport */}
+              <div className="rsvp_inputer_section">
+                <label className="rsvp_label">
+                  Do you need transportation from Hotel → Church → Venue → Back to Hotel?
+                </label>
+                <select
+                  name="needHotelTransport"
+                  className="rsvp_input"
+                  value={formData.needHotelTransport}
+                  onChange={handleChange}
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                {formData.needHotelTransport === "yes" && (
+                  <input
+                    type="number"
+                    min="1"
+                    name="hotelTransportCount"
+                    className="rsvp_input"
+                    placeholder="How many people?"
+                    value={formData.hotelTransportCount}
+                    onChange={handleChange}
+                    required
+                  />
                 )}
               </div>
 
@@ -226,17 +244,6 @@ const Rsvp = () => {
                 )}
               </div>
 
-              {/* Message */}
-              <div className="rsvp_inputer_section">
-                <label className="rsvp_label">Message for the couple</label>
-                <textarea
-                  className="rsvp_textarea"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows="4"
-                />
-              </div>
               <div className="rsvp_inputer_section">
                 <button
                   type="submit"
@@ -246,6 +253,7 @@ const Rsvp = () => {
                   {isSubmitting ? "Submitting..." : "Send RSVP"}
                 </button>
               </div>
+
             </form>
           </div>
         </div>

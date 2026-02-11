@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Input, Space, message } from "antd";
+import { Table, Button, Input, Space, message } from "antd";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-const dummyPassword = "pj26"; // Set your dummy password here
+const dummyPassword = "pj26";
 
 const AdminDashboard = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -17,7 +17,10 @@ const AdminDashboard = () => {
   const fetchRsvps = async () => {
     setLoading(true);
     const snapshot = await getDocs(collection(db, "rsvps"));
-    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setRsvpEntries(data);
     setLoading(false);
   };
@@ -26,7 +29,7 @@ const AdminDashboard = () => {
     if (loggedIn) fetchRsvps();
   }, [loggedIn]);
 
-  // Handle Login
+  // Login
   const handleLogin = () => {
     if (passwordInput === dummyPassword) {
       setLoggedIn(true);
@@ -36,7 +39,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle Delete RSVP
+  // Delete
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, "rsvps", id));
@@ -47,42 +50,83 @@ const AdminDashboard = () => {
     }
   };
 
-  // Export to Excel
+  // Export Excel
   const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(rsvpEntries);
+    const formattedData = rsvpEntries.map((entry) => ({
+      FullName: entry.fullName,
+      AttendingWedding: entry.attendingWedding,
+      AttendingReception: entry.attendingReception,
+      Heritage: entry.heritage,
+      BringingGuests: entry.bringingGuests,
+      GuestType: entry.guestType,
+      GuestCount: entry.guestCount,
+      ChurchTransport: entry.needChurchTransport,
+      ChurchTransportCount: entry.churchTransportCount,
+      HotelTransport: entry.needHotelTransport,
+      HotelTransportCount: entry.hotelTransportCount,
+      SubmittedAt: entry.submittedAt,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(formattedData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "RSVPs");
     const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" });
     saveAs(new Blob([buf]), "RSVP_Entries.xlsx");
   };
 
-  // Table columns
+  // Table Columns
   const columns = [
-    { title: "Full Name", dataIndex: "fullName", key: "fullName" },
     {
-      title: "Attending Wedding",
+      title: "Guest Name(s)",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+    {
+      title: "Wedding",
       dataIndex: "attendingWedding",
       key: "attendingWedding",
     },
     {
-      title: "Attending Reception",
+      title: "Reception",
       dataIndex: "attendingReception",
       key: "attendingReception",
     },
     {
-      title: "Transportation",
-      dataIndex: "transportationNeeded",
-      key: "transportationNeeded",
+      title: "Heritage",
+      dataIndex: "heritage",
+      key: "heritage",
     },
     {
-      title: "Transport From",
-      dataIndex: "transportFrom",
-      key: "transportFrom",
-      render: (val) => val.join(", "),
+      title: "Guests",
+      key: "guests",
+      render: (_, record) =>
+        record.bringingGuests === "yes"
+          ? `${record.guestCount} (${record.guestType})`
+          : "No",
     },
-    { title: "Heritage", dataIndex: "heritage", key: "heritage" },
-    { title: "Guests", dataIndex: "guestCount", key: "guestCount" },
-    { title: "Message", dataIndex: "message", key: "message" },
+    {
+      title: "Church → Venue Transport",
+      key: "churchTransport",
+      render: (_, record) =>
+        record.needChurchTransport === "yes"
+          ? `Yes (${record.churchTransportCount})`
+          : "No",
+    },
+    {
+      title: "Hotel Full Route Transport",
+      key: "hotelTransport",
+      render: (_, record) =>
+        record.needHotelTransport === "yes"
+          ? `Yes (${record.hotelTransportCount})`
+          : "No",
+    },
+    {
+      title: "Submitted",
+      dataIndex: "submittedAt",
+      key: "submittedAt",
+      render: (date) =>
+        date ? new Date(date).toLocaleString() : "",
+    },
     {
       title: "Action",
       key: "action",
@@ -94,7 +138,7 @@ const AdminDashboard = () => {
     },
   ];
 
-  // Login Page
+  // Login Screen
   if (!loggedIn) {
     return (
       <div
@@ -126,15 +170,16 @@ const AdminDashboard = () => {
     );
   }
 
-  // Admin Dashboard Page
+  // Dashboard
   return (
     <div style={{ padding: 20 }}>
       <Space style={{ marginBottom: 20 }}>
-        <h4>RSVP Admin Dashboard</h4>
+        <h3>RSVP Admin Dashboard</h3>
         <Button type="primary" onClick={exportToExcel}>
           Export Excel
         </Button>
       </Space>
+
       <Table
         rowKey="id"
         columns={columns}
