@@ -73,9 +73,12 @@ const Rsvp = () => {
         <div className="rsvpier">
           <h2 className="rsvp_ttle">RSVP</h2>
 
+          {/* Flag information added here */}
           <p className="rsvp_p">
-            Kindly RSVP by <strong>March 6th, 2026</strong>.
-            <br /><br />
+            Kindly RSVP by <strong>March 6th, 2026</strong>.<br /><br />
+            To honor the diverse backgrounds of our families and friends, we
+            will be providing flags for our guests. Please indicate the country
+            or heritage you wish to represent.<br /><br />
             Shuttle transportation will be provided between the hotel, church,
             and venue.
           </p>
@@ -143,6 +146,7 @@ const Rsvp = () => {
                   name="heritage"
                   value={formData.heritage}
                   onChange={handleChange}
+                  placeholder="e.g. Italy, Ireland"
                 />
               </div>
 
