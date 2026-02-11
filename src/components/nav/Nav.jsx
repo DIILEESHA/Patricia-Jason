@@ -19,33 +19,16 @@ const Nav = () => {
         </div>
 
         <div className="nav_sub">
-          <ul className="nav_ul">
-            <li className="nav_li">
-              <Link to="/">Home</Link>
-            </li>
-
-            <li className="nav_li">
-              <Link to="/story">Our Story</Link>
-            </li>
-            <li className="nav_li ">
-              <Link to="/dress">What to wear</Link>
-            </li>
-          </ul>
+          <h2 className="couple">Patricia & Jason</h2>
+    
         </div>
 
         <div className="nav_sub nil">
-          <h2 className="couple">Patricia & Jason</h2>
         </div>
 
         <div className="nav_sub">
           <ul className="nav_ul">
-            <li className="nav_li">
-              <Link to="/faq">FAQ</Link>
-            </li>
-
-            <li className="nav_li">
-              <Link to="/wedding-party">Wedding party</Link>
-            </li>
+        
             <li className="nav_li mafia">
               <Link to="/rsvp">RSVP</Link>
             </li>
